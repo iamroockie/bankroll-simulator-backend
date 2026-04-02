@@ -1,0 +1,72 @@
+# Poker Bankroll Simulator — Example Config
+# Run with: br --config config.toml
+
+starting_bankroll = 3_000
+bust_bankroll     = 1_000
+num_simulations   = 10_000
+total_hands       = 1_000_000
+
+# Limits must be listed in ascending order by buyin
+[[limits]]
+name             = "NL25"
+bb_size          = 0.25
+ev_per_100       = 8
+std_dev_per_100  = 90
+move_up_at       = 2_500
+# no move_down_at (lowest limit)
+
+[[limits]]
+name             = "NL50"
+bb_size          = 0.50
+ev_per_100       = 7
+std_dev_per_100  = 95
+move_up_at       = 5_000
+move_down_at     = 2_000
+
+[[limits]]
+name             = "NL100"
+bb_size          = 1
+ev_per_100       = 6
+std_dev_per_100  = 100
+move_up_at       = 10_000
+move_down_at     = 4_000
+
+[[limits]]
+name             = "NL200"
+bb_size          = 2
+ev_per_100       = 5
+std_dev_per_100  = 110
+move_up_at       = 25_000
+move_down_at     = 8_000
+
+[[limits]]
+name             = "NL500"
+bb_size          = 5
+ev_per_100       = 4
+std_dev_per_100  = 120
+# no move_up_at (top limit)
+move_down_at     = 20_000
+
+# Cashout rule (optional)
+# Withdraw 50% of profits every 50,000 hands
+[cashout_rule]
+interval_hands = 50_000
+[cashout_rule.kind]
+type = "profit_percentage"
+percentage = 0.50
+
+# Probability queries (optional)
+[[probability_queries]]
+type = "bust"
+
+[[probability_queries]]
+type   = "reach_profit"
+target = 100_000.0
+
+[[probability_queries]]
+type   = "reach_profit"
+target = 200_000.0
+
+[[probability_queries]]
+type  = "at_limit_or_above"
+limit = "NL500"
