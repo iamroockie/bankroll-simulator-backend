@@ -5,7 +5,6 @@ use crate::core::config::{CashoutKind, Config, ProbabilityQuery, starting_limit_
 
 /// Result of one complete simulation run
 #[derive(Debug)]
-#[allow(dead_code)]
 pub struct SimResult {
     pub net_profit: f64,
     pub total_cashouts: f64,
