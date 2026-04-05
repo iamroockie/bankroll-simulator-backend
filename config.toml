@@ -3,8 +3,9 @@
 
 starting_bankroll = 3_000
 bust_bankroll     = 1_000
-num_simulations   = 10_000
 total_hands       = 1_000_000
+
+
 
 # Limits must be listed in ascending order by buyin
 [[limits]]
@@ -36,16 +37,10 @@ name             = "NL200"
 bb_size          = 2
 ev_per_100       = 5
 std_dev_per_100  = 110
-move_up_at       = 25_000
+# no move_up_at (top limit)
 move_down_at     = 8_000
 
-[[limits]]
-name             = "NL500"
-bb_size          = 5
-ev_per_100       = 4
-std_dev_per_100  = 120
-# no move_up_at (top limit)
-move_down_at     = 20_000
+
 
 # Cashout rule (optional)
 # Withdraw 50% of profits every 50,000 hands
@@ -54,6 +49,8 @@ interval_hands = 50_000
 [cashout_rule.kind]
 type = "profit_percentage"
 percentage = 0.50
+
+
 
 # Probability queries (optional)
 [[probability_queries]]
@@ -64,9 +61,9 @@ type   = "reach_profit"
 target = 100_000.0
 
 [[probability_queries]]
-type   = "reach_profit"
-target = 200_000.0
+type   = "reach_bankroll"
+target = 50_000.0
 
 [[probability_queries]]
 type  = "at_limit_or_above"
-limit = "NL500"
+limit = "NL200"

@@ -65,7 +65,7 @@ pub fn print_results(
     );
 }
 
-pub fn print_validate_summary(config: &Config) {
+pub fn print_validate_summary(config: &Config, num_simulations: usize) {
     println!("Config is valid.\n");
     println!(
         "  Starting bankroll: {}",
@@ -73,7 +73,7 @@ pub fn print_validate_summary(config: &Config) {
     );
     println!(
         "  Simulations:       {}",
-        format_count(config.num_simulations)
+        format_count(num_simulations)
     );
     println!(
         "  Total hands:       {}",

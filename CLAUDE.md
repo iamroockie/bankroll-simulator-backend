@@ -12,7 +12,7 @@ Poker bankroll Monte Carlo simulator (`br`). Runs N parallel simulations of a ba
 cargo build                    # debug build
 cargo build --release          # release build (thin LTO, codegen-units=1)
 cargo run                      # run CLI with default config.toml
-cargo run -- -s 1000 -H 50000 # quick smoke test
+cargo run -- -H 50000         # quick smoke test (NUM_SIMULATIONS from .env)
 cargo run -- validate          # validate config only
 cargo run -- --json            # JSON output
 cargo run --bin server         # start HTTP server on :3000
@@ -30,10 +30,11 @@ Rust edition 2024, package name `br`. Two binaries share the library crate:
 Library modules:
 
 - **`src/cli.rs`** — Clap argument definitions (`Cli`, `Command`).
-- **`src/core/config.rs`** — `Config`, `LimitConfig`, `CashoutRule`, `CashoutKind`, `ProbabilityQuery` structs + `validate()` + `starting_limit_index()`. Serde-driven (deserializes from both TOML and JSON).
+- **`.env`** — `NUM_SIMULATIONS=N` (not committed). Read at startup by both binaries via `dotenvy`.
+- **`src/core/config.rs`** — `Config`, `LimitConfig`, `CashoutRule`, `CashoutKind`, `ProbabilityQuery` structs + `validate()` + `starting_limit_index()`. Serde-driven (deserializes from both TOML and JSON). Does not contain `num_simulations`.
 - **`src/core/simulation.rs`** — `run_simulation()` — single-run hot loop: 100-hand steps using precomputed Normal distributions, limit movement, cashout logic, bust detection. Returns `SimResult`.
 - **`src/core/stats.rs`** — `AggregateStats` — collects and sorts net profits from all runs, computes percentiles and query hit rates.
-- **`src/runner.rs`** — `run_simulations()` — orchestrates parallel execution via Rayon `par_iter`. Each sim gets its own `SmallRng` (seeded from `seed XOR i` or OS entropy).
+- **`src/runner.rs`** — `run_simulations(config, seed, num_simulations)` — orchestrates parallel execution via Rayon `par_iter`. Each sim gets its own `SmallRng` (seeded from `seed XOR i` or OS entropy).
 - **`src/output/json.rs`** — Serializes `AggregateStats` into the JSON response shape (CIs, percentiles, query results).
 - **`src/output/text.rs`** — Pretty-prints results to stdout.
 

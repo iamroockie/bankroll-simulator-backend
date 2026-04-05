@@ -17,7 +17,6 @@ br [OPTIONS] [SUBCOMMAND]
 
 OPTIONS:
   -c, --config <FILE>      Path to TOML config [default: config.toml]
-  -s, --simulations <N>    Override num_simulations from config
   -H, --hands <N>          Override total_hands from config
       --seed <N>           Fixed seed for reproducible runs
   -q, --quiet              Suppress progress line
@@ -34,7 +33,7 @@ SUBCOMMANDS:
 br
 
 # Quick smoke test
-br -s 1000 -H 50000
+br -H 50000
 
 # Validate config
 br validate -c config.toml
@@ -48,7 +47,6 @@ br --json | jq .
 ```toml
 starting_bankroll = 3_000
 bust_bankroll     = 1_000           # bust if bankroll drops below this
-num_simulations   = 10_000          # between 1 and 100_000
 total_hands       = 1_000_000
 
 [[limits]]                          # list in ascending bb_size order
@@ -98,7 +96,6 @@ limit = "NL500"
 - `move_down_at < move_up_at` for each limit
 - `bust_bankroll` must be positive and less than `starting_bankroll`
 - `interval_hands` must be a positive multiple of 100
-- `num_simulations` must be between 1 and 100_000
 
 ## HTTP Server
 
@@ -116,7 +113,6 @@ server -p 8080
 {
   "starting_bankroll": 3000,
   "bust_bankroll": 1000,
-  "num_simulations": 10000,
   "total_hands": 1000000,
   "limits": [
     {

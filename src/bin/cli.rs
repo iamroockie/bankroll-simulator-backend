@@ -6,6 +6,13 @@ use br::{
 use clap::Parser;
 
 fn main() {
+    dotenvy::dotenv().ok();
+
+    let num_simulations: usize = std::env::var("NUM_SIMULATIONS")
+        .expect("NUM_SIMULATIONS must be set in .env")
+        .parse()
+        .expect("NUM_SIMULATIONS must be a valid integer");
+
     let cli = Cli::parse();
 
     let toml_str = match std::fs::read_to_string(&cli.config) {
@@ -24,9 +31,6 @@ fn main() {
         }
     };
 
-    if let Some(n) = cli.simulations {
-        cfg.num_simulations = n;
-    }
     if let Some(h) = cli.hands {
         cfg.total_hands = h;
     }
@@ -37,18 +41,18 @@ fn main() {
     }
 
     if let Some(Command::Validate) = cli.command {
-        output::text::print_validate_summary(&cfg);
+        output::text::print_validate_summary(&cfg, num_simulations);
         return;
     }
 
     if !cli.quiet {
         eprintln!(
             "Running {} simulations ({} hands each)...",
-            cfg.num_simulations, cfg.total_hands
+            num_simulations, cfg.total_hands
         );
     }
 
-    let result = runner::run_simulations(&cfg, cli.seed);
+    let result = runner::run_simulations(&cfg, cli.seed, num_simulations);
     let elapsed = result.elapsed.as_secs_f64();
 
     if cli.json {

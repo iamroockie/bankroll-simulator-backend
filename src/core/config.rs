@@ -5,7 +5,6 @@ pub struct Config {
     pub starting_bankroll: f64,
     /// Bankroll below which the simulation counts as bust
     pub bust_bankroll: f64,
-    pub num_simulations: usize,
     pub total_hands: u64,
     pub limits: Vec<LimitConfig>,
     pub cashout_rule: Option<CashoutRule>,
@@ -189,12 +188,6 @@ pub fn validate(config: &Config) -> Result<(), String> {
     }
     if config.starting_bankroll <= 0.0 {
         return Err("starting_bankroll must be positive".to_string());
-    }
-    if config.num_simulations == 0 {
-        return Err("num_simulations must be positive".to_string());
-    }
-    if config.num_simulations > 100_000 {
-        return Err("num_simulations must be less than 100,000".to_string());
     }
     if config.total_hands == 0 || config.total_hands % 100 != 0 {
         return Err("total_hands must be a positive multiple of 100".to_string());

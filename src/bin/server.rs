@@ -1,6 +1,6 @@
 use axum::{
     Router,
-    extract::Query,
+    extract::{Query, State},
     http::{StatusCode, header},
     response::{IntoResponse, Response},
     routing::post,
@@ -32,7 +32,11 @@ fn error_json(msg: String) -> Response {
         .into_response()
 }
 
-async fn simulate(Query(query): Query<SimulateQuery>, body: String) -> Response {
+async fn simulate(
+    State(num_simulations): State<usize>,
+    Query(query): Query<SimulateQuery>,
+    body: String,
+) -> Response {
     let cfg: config::Config = match serde_json::from_str(&body) {
         Ok(c) => c,
         Err(e) => {
@@ -48,7 +52,7 @@ async fn simulate(Query(query): Query<SimulateQuery>, body: String) -> Response 
 
     let cfg_for_run = cfg.clone();
     let result =
-        tokio::task::spawn_blocking(move || runner::run_simulations(&cfg_for_run, query.seed))
+        tokio::task::spawn_blocking(move || runner::run_simulations(&cfg_for_run, query.seed, num_simulations))
             .await
             .unwrap();
 
@@ -58,10 +62,18 @@ async fn simulate(Query(query): Query<SimulateQuery>, body: String) -> Response 
 
 #[tokio::main]
 async fn main() {
+    dotenvy::dotenv().ok();
+
+    let num_simulations: usize = std::env::var("NUM_SIMULATIONS")
+        .expect("NUM_SIMULATIONS must be set in .env")
+        .parse()
+        .expect("NUM_SIMULATIONS must be a valid integer");
+
     let cli = Cli::parse();
 
     let app = Router::new()
         .route("/simulate", post(simulate))
+        .with_state(num_simulations)
         .layer(CorsLayer::permissive());
 
     let addr = format!("0.0.0.0:{}", cli.port);

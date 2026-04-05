@@ -7,10 +7,6 @@ pub struct Cli {
     #[arg(short, long, value_name = "FILE", default_value = "config.toml")]
     pub config: String,
 
-    /// Override num_simulations from config
-    #[arg(short, long, value_name = "N")]
-    pub simulations: Option<usize>,
-
     /// Override total_hands from config
     #[arg(short = 'H', long, value_name = "N")]
     pub hands: Option<u64>,

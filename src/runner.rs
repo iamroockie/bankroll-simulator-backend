@@ -11,12 +11,12 @@ pub struct RunResult {
     pub elapsed: Duration,
 }
 
-pub fn run_simulations(config: &Config, seed: Option<u64>) -> RunResult {
+pub fn run_simulations(config: &Config, seed: Option<u64>, num_simulations: usize) -> RunResult {
     let precomputed = PrecomputedLimits::new(config);
     let num_queries = config.probability_queries.len();
     let start = Instant::now();
 
-    let results = (0..config.num_simulations)
+    let results = (0..num_simulations)
         .into_par_iter()
         .map(|i| {
             let mut rng = match seed {
