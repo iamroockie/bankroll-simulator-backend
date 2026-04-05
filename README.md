@@ -10,6 +10,16 @@ Monte Carlo bankroll simulator with multi-limit movement, cashouts, and custom p
 - Probability queries: bust chance, reaching a profit target, reaching a bankroll target, finishing at a given limit or above
 - CLI binary (`br`) + HTTP server binary (`server`)
 
+## Environment
+
+Create a `.env` file in the project root:
+
+```
+NUM_SIMULATIONS=10000
+```
+
+Both binaries read this at startup via `dotenvy`. The value must be a positive integer.
+
 ## CLI Usage
 
 ```
@@ -130,11 +140,26 @@ server -p 8080
 
 ```json
 {
-  "ci_70":  { "low": 10234.00, "high": 39847.00 },
-  "ci_95":  { "low":  1102.00, "high": 51293.00 },
-  "best":   61450.00,
-  "worst":   -980.00,
-  "percentiles": { "p10": 6200, "p25": 14100, "p50": 24500, "p75": 33800, "p90": 44200 },
+  "simulations": 10000,
+  "percentiles": {
+    "worst": { "final_bankroll": 1200.00, "cashout": 0.00 },
+    "p2_5":  { "final_bankroll": 3100.00, "cashout": 100.00 },
+    "p5":    { "final_bankroll": 4200.00, "cashout": 1200.00 },
+    "p10":   { "final_bankroll": 5800.00, "cashout": 2800.00 },
+    "p15":   { "final_bankroll": 7100.00, "cashout": 4100.00 },
+    "p20":   { "final_bankroll": 8300.00, "cashout": 5300.00 },
+    "p30":   { "final_bankroll": 10900.00, "cashout": 7900.00 },
+    "p40":   { "final_bankroll": 13200.00, "cashout": 10200.00 },
+    "p50":   { "final_bankroll": 15800.00, "cashout": 12800.00 },
+    "p60":   { "final_bankroll": 18700.00, "cashout": 15700.00 },
+    "p70":   { "final_bankroll": 22100.00, "cashout": 19100.00 },
+    "p80":   { "final_bankroll": 27300.00, "cashout": 24300.00 },
+    "p85":   { "final_bankroll": 30600.00, "cashout": 27600.00 },
+    "p90":   { "final_bankroll": 35100.00, "cashout": 32100.00 },
+    "p95":   { "final_bankroll": 42800.00, "cashout": 39800.00 },
+    "p97_5": { "final_bankroll": 49200.00, "cashout": 46200.00 },
+    "best":  { "final_bankroll": 88400.00, "cashout": 85400.00 }
+  },
   "probability_queries": [
     { "type": "bust",         "probability": 0.032100 },
     { "type": "reach_profit", "target": 100000.00, "probability": 0.417000 }
@@ -142,5 +167,8 @@ server -p 8080
   "elapsed_seconds": 4.20
 }
 ```
+
+Each percentile entry is a **coherent pair** from the same simulation run, sorted by `net_profit`.
+`net_profit = final_bankroll + cashout - starting_bankroll` (computed by the client).
 
 Errors are returned as `400 Bad Request` with body `{"error": "..."}`.
