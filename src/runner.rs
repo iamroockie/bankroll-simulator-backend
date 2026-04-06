@@ -1,5 +1,5 @@
 use crate::core::config::Config;
-use crate::core::simulation::{run_simulation, PrecomputedLimits};
+use crate::core::simulation::{PrecomputedLimits, run_simulation};
 use crate::core::stats::AggregateStats;
 use rand::SeedableRng;
 use rand::rngs::SmallRng;
@@ -21,7 +21,7 @@ pub fn run_simulations(config: &Config, seed: Option<u64>, num_simulations: usiz
         .map(|i| {
             let mut rng = match seed {
                 Some(s) => SmallRng::seed_from_u64(s ^ (i as u64)),
-                None => SmallRng::from_os_rng(),
+                None => rand::make_rng(),
             };
             run_simulation(config, &precomputed, &mut rng)
         })

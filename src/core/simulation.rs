@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::{Rng, RngExt as _};
 use rand_distr::Normal;
 
 use crate::core::config::{CashoutKind, Config, ProbabilityQuery, starting_limit_index};
