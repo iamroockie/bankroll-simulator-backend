@@ -10,12 +10,22 @@ pub struct AggregateStats {
 
 pub struct SimReport {
     pub worst: (f64, f64),
-    pub p2_5:  (f64, f64), pub p5:   (f64, f64),
-    pub p10:   (f64, f64), pub p15:  (f64, f64), pub p20:  (f64, f64),
-    pub p30:   (f64, f64), pub p40:  (f64, f64), pub p50:  (f64, f64),
-    pub p60:   (f64, f64), pub p70:  (f64, f64), pub p80:  (f64, f64),
-    pub p85:   (f64, f64), pub p90:  (f64, f64), pub p95:  (f64, f64),
-    pub p97_5: (f64, f64), pub best: (f64, f64),
+    pub p2_5: (f64, f64),
+    pub p5: (f64, f64),
+    pub p10: (f64, f64),
+    pub p15: (f64, f64),
+    pub p20: (f64, f64),
+    pub p30: (f64, f64),
+    pub p40: (f64, f64),
+    pub p50: (f64, f64),
+    pub p60: (f64, f64),
+    pub p70: (f64, f64),
+    pub p80: (f64, f64),
+    pub p85: (f64, f64),
+    pub p90: (f64, f64),
+    pub p95: (f64, f64),
+    pub p97_5: (f64, f64),
+    pub best: (f64, f64),
 }
 // Each pair: .0 = final_bankroll, .1 = total_cashouts — from the same simulation run.
 
@@ -40,28 +50,32 @@ impl AggregateStats {
         triples.sort_unstable_by(|a, b| a.0.total_cmp(&b.0));
         let runs = triples.into_iter().map(|(_, fb, co)| (fb, co)).collect();
 
-        Self { runs, total_simulations, query_hit_counts }
+        Self {
+            runs,
+            total_simulations,
+            query_hit_counts,
+        }
     }
 
     pub fn report(&self) -> SimReport {
         SimReport {
             worst: self.runs.first().copied().unwrap_or((0.0, 0.0)),
-            p2_5:  pair_at(&self.runs, 0.025),
-            p5:    pair_at(&self.runs, 0.05),
-            p10:   pair_at(&self.runs, 0.10),
-            p15:   pair_at(&self.runs, 0.15),
-            p20:   pair_at(&self.runs, 0.20),
-            p30:   pair_at(&self.runs, 0.30),
-            p40:   pair_at(&self.runs, 0.40),
-            p50:   pair_at(&self.runs, 0.50),
-            p60:   pair_at(&self.runs, 0.60),
-            p70:   pair_at(&self.runs, 0.70),
-            p80:   pair_at(&self.runs, 0.80),
-            p85:   pair_at(&self.runs, 0.85),
-            p90:   pair_at(&self.runs, 0.90),
-            p95:   pair_at(&self.runs, 0.95),
+            p2_5: pair_at(&self.runs, 0.025),
+            p5: pair_at(&self.runs, 0.05),
+            p10: pair_at(&self.runs, 0.10),
+            p15: pair_at(&self.runs, 0.15),
+            p20: pair_at(&self.runs, 0.20),
+            p30: pair_at(&self.runs, 0.30),
+            p40: pair_at(&self.runs, 0.40),
+            p50: pair_at(&self.runs, 0.50),
+            p60: pair_at(&self.runs, 0.60),
+            p70: pair_at(&self.runs, 0.70),
+            p80: pair_at(&self.runs, 0.80),
+            p85: pair_at(&self.runs, 0.85),
+            p90: pair_at(&self.runs, 0.90),
+            p95: pair_at(&self.runs, 0.95),
             p97_5: pair_at(&self.runs, 0.975),
-            best:  self.runs.last().copied().unwrap_or((0.0, 0.0)),
+            best: self.runs.last().copied().unwrap_or((0.0, 0.0)),
         }
     }
 

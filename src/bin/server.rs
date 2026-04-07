@@ -51,10 +51,11 @@ async fn simulate(
     }
 
     let cfg_for_run = cfg.clone();
-    let result =
-        tokio::task::spawn_blocking(move || runner::run_simulations(&cfg_for_run, query.seed, num_simulations))
-            .await
-            .unwrap();
+    let result = tokio::task::spawn_blocking(move || {
+        runner::run_simulations(&cfg_for_run, query.seed, num_simulations)
+    })
+    .await
+    .unwrap();
 
     let body = json::to_json_string(&cfg, &result.stats, result.elapsed.as_secs_f64());
     ([(header::CONTENT_TYPE, "application/json")], body).into_response()

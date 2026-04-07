@@ -22,17 +22,14 @@ pub fn print_results(
     );
 
     println!("\n--- Results --------------------------------------------------------");
-    println!(
-        "  {:<10} {:<18} {:<18}",
-        "", "Final Bankroll", "Cashout"
-    );
+    println!("  {:<10} {:<18} {:<18}", "", "Final Bankroll", "Cashout");
     println!("{}", metric_row("Worst:", r.worst));
-    println!("{}", metric_row("P10:",   r.p10));
-    println!("{}", metric_row("P30:",   r.p30));
-    println!("{}", metric_row("P50:",   r.p50));
-    println!("{}", metric_row("P70:",   r.p70));
-    println!("{}", metric_row("P90:",   r.p90));
-    println!("{}", metric_row("Best:",  r.best));
+    println!("{}", metric_row("P10:", r.p10));
+    println!("{}", metric_row("P30:", r.p30));
+    println!("{}", metric_row("P50:", r.p50));
+    println!("{}", metric_row("P70:", r.p70));
+    println!("{}", metric_row("P90:", r.p90));
+    println!("{}", metric_row("Best:", r.best));
 
     if !config.probability_queries.is_empty() {
         println!("\n--- Probability Queries ----------------------------------------");
@@ -54,10 +51,7 @@ pub fn print_validate_summary(config: &Config, num_simulations: usize) {
         "  Starting bankroll: {}",
         format_dollars(config.starting_bankroll)
     );
-    println!(
-        "  Simulations:       {}",
-        format_count(num_simulations)
-    );
+    println!("  Simulations:       {}", format_count(num_simulations));
     println!(
         "  Total hands:       {}",
         format_count(config.total_hands as usize)
