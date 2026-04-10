@@ -149,20 +149,20 @@ pub fn validate(config: &Config) -> Result<(), String> {
     if let Some(rule) = &config.cashout_rule {
         if rule.interval_hands == 0 || rule.interval_hands % 100 != 0 {
             return Err(format!(
-                "cashout interval_hands ({}) must be a positive multiple of 100",
+                "Cashout interval_hands ({}) must be a positive multiple of 100",
                 rule.interval_hands
             ));
         }
         match rule.kind {
             CashoutKind::Fixed { amount } => {
                 if amount < 0.0 {
-                    return Err("cashout amount must be non-negative".to_string());
+                    return Err("Cashout amount must be non-negative".to_string());
                 }
             }
             CashoutKind::ProfitPercentage { percentage }
             | CashoutKind::BankrollPercentage { percentage } => {
                 if percentage < 0.0 || percentage > 1.0 {
-                    return Err("cashout percentage must be between 0.0 and 1.0".to_string());
+                    return Err("Cashout percentage must be between 0.0 and 1.0".to_string());
                 }
             }
         }
